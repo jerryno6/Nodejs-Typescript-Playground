@@ -1,0 +1,1 @@
+This is a playground where I practice small projects of typescipt from https://www.codecademy.com/learn/learn-typescript.
