@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { GetErrorResponse, GetSuccessResponse } from './utils/Response';
+import { GetErrorResponse, GetSuccessResponse } from '../utils/Response';
 
 /**
  *
@@ -11,20 +11,20 @@ import { GetErrorResponse, GetSuccessResponse } from './utils/Response';
  *
  */
 
-export const lambdaHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const getTodo = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     let response: APIGatewayProxyResult;
     try {
-        let body = {
-            message: 'It works :)',
-        };
+        let body = [
+            { id: 1, task: 'task 1' },
+            { id: 2, task: 'task 2' },
+            { id: 3, task: 'task 3' },
+        ];
 
         response = GetSuccessResponse(body);
     } catch (err) {
         console.log(err);
 
-        let body = {
-            err
-        }
+        let body = { err };
         response = GetErrorResponse(body);
     }
 

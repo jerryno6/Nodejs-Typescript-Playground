@@ -1,9 +1,7 @@
 import { APIGatewayProxyResult } from 'aws-lambda';
 
 export function GetSuccessResponse(body: any): APIGatewayProxyResult {
-    let response: APIGatewayProxyResult;
-
-    response = {
+    let response: APIGatewayProxyResult = {
         statusCode: 200,
         body: JSON.stringify(body),
     };
@@ -12,7 +10,7 @@ export function GetSuccessResponse(body: any): APIGatewayProxyResult {
 }
 
 
-export function GetErrorResponse(body: any = null): APIGatewayProxyResult {
+export function GetErrorResponse(body: any): APIGatewayProxyResult {
 
     let response: APIGatewayProxyResult;
     body.message = 'some error happened';
