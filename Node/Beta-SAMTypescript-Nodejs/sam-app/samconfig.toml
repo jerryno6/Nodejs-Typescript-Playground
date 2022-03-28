@@ -1,0 +1,13 @@
+version = 0.1
+
+[default.global.parameters]
+stack_name = "teststack"
+
+[default.deploy.parameters]
+stack_name = "my-app-stack"
+s3_bucket = "vuleartifacts-for-lambda"
+s3_prefix = "my-s3-prefix"
+region = "eu-central-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+tags = "project=\"my-application\" stage=\"production\""
