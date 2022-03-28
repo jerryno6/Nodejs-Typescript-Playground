@@ -19,6 +19,7 @@ To use the SAM CLI, you need the following tools.
 * Node.js - [Install Node.js 14](https://nodejs.org/en/), including the NPM package management tool.
 * Docker - [Install Docker community edition](https://hub.docker.com/search/?type=edition&offering=community)
 * Run `aws configure` to config credential for aws, using accesskey and secret
+* Need a bucket named `vuleartifacts-for-lambda` in region `eu-central-1` (Singapore) before running sam deploy
 
 To build and deploy your application for the first time, run the following in your shell:
 
