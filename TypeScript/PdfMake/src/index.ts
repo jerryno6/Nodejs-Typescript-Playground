@@ -5,8 +5,8 @@ import { Column, Content, ContentColumns, DynamicBackground, DynamicContent, Mar
 
 var fonts = {
 	Roboto: {
-		normal: 'D:\\PROJECTS\\GITHUB\\Node-TypeScript\\TypeScript\\PdfMake\\dist\\fonts\\Roboto-Regular.ttf',
-		bold: 'D:\\PROJECTS\\GITHUB\\Node-TypeScript\\TypeScript\\PdfMake\\dist\\fonts\\Roboto-Medium.ttf',
+		normal: './fonts/Roboto-Regular.ttf',
+		bold: './fonts/Roboto-Medium.ttf',
 	}
 };
 
