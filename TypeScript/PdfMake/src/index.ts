@@ -1,7 +1,6 @@
 import { getTranportUnitDocDefinition } from './transportUnitTemplate';
 import * as fs from 'fs';
 import PdfPrinter from 'pdfmake';
-import { Column, Content, ContentColumns, DynamicBackground, DynamicContent, Margins, Node, PageOrientation, PageSize, PDFVersion, Style, StyleDictionary, TDocumentDefinitions, TDocumentInformation, Watermark } from 'pdfmake/interfaces';
 
 var fonts = {
 	Roboto: {
