@@ -51,10 +51,10 @@ const transportUnitData = {
 }
 
 
-var docDefinition= getTranportUnitDocDefinition(transportUnitData);
-var printer = new PdfPrinter(fonts);
+let docDefinition= getTranportUnitDocDefinition(transportUnitData);
+let printer = new PdfPrinter(fonts);
 let fileName = './basics.pdf'
-var pdfDoc = printer.createPdfKitDocument(docDefinition);
+let pdfDoc = printer.createPdfKitDocument(docDefinition);
 pdfDoc.pipe(fs.createWriteStream(fileName));
 pdfDoc.end();
 

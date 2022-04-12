@@ -34,7 +34,7 @@ function getSender(){
 }
 
 function getGermanAddress(location:any){
-    var address = location.address1 + '\n';
+    let address = location.address1 + '\n';
     if(location.address2)
     {
         address += location.address2 + '\n' 
@@ -73,7 +73,7 @@ function getNameOfTargetPhotoStudio(location:any){
 
 function getTable(articles:any){
     // Header of table
-    var tableBody = [
+    let tableBody = [
             [
                 {text: '#', style: 'tableHeader'}, 
                 {text: 'Gtin', style: 'tableHeader'}, 
@@ -88,7 +88,7 @@ function getTable(articles:any){
         );
     }
     
-    var table = {
+    let table = {
 		style: 'table',
 		table: {
             widths: [30, 110, '*'],
