@@ -1,6 +1,7 @@
 import { getTranportUnitDocDefinition } from './transportUnitTemplate';
-import * as fs from 'fs';
 import PdfPrinter from 'pdfmake';
+import awss3 from 'aws-sdk/clients/s3';
+import stream from 'stream';
 
 var fonts = {
 	Roboto: {
@@ -53,9 +54,37 @@ const transportUnitData = {
 
 let docDefinition= getTranportUnitDocDefinition(transportUnitData);
 let printer = new PdfPrinter(fonts);
-let fileName = './basics.pdf'
 let pdfDoc = printer.createPdfKitDocument(docDefinition);
-pdfDoc.pipe(fs.createWriteStream(fileName));
-pdfDoc.end();
 
-console.log(`created pdfkit doc at ${fileName}`);
+//1. if we want to save to file, use 2 lines below
+//let fileName = 'basics.pdf'
+//pdfDoc.pipe(fs.createWriteStream(fileName));
+//pdfDoc.end();
+
+//2. we want to save to s3, use 2 lines below
+function getS3OutputStream(bucket: string, key: string) {
+    var passthroughStream = new stream.PassThrough();
+    var params:awss3.PutObjectRequest = {
+        Bucket: bucket, 
+        Key: key, 
+        Body: passthroughStream};
+        
+    let s3 = new awss3();
+    s3.upload(params, function(err, data){ 
+        if(err){
+            console.log('!!! ERROR !!!');
+            console.log(err, data);            
+        }
+        else{
+            console.log(data);
+        }
+    });
+  
+    return passthroughStream;
+}
+
+const bucket = 'arn:aws:s3:eu-central-1:085420227850:accesspoint/vuleaccesspoint'
+const fileName = `pdfs/file-${Date.now()}.pdf`
+let s3OutputStream = getS3OutputStream(bucket, fileName);
+pdfDoc.pipe(s3OutputStream);
+pdfDoc.end();
