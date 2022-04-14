@@ -1,36 +1,79 @@
 import { ContentColumns, TDocumentDefinitions } from "pdfmake/interfaces";
+import { resourceUsage } from "process";
 
-function getHeader(teNumber:any): ContentColumns {
-    return {
+function getHeader(teNumber:any, goodsType:string): ContentColumns {
+    let result: ContentColumns = {
     	columns: [
             {
                 alignment: 'left',
         		text: `TE-Number: ${teNumber}`,
                 style: 'header'
-            },
-        	{
-        	    alignment: 'right',
-        		text: 'ACHTUNG! Eilige Werbeware',
-        		style: 'warning'
-        	}
+            },	
     	]
 	}
+
+	if (goodsType === 'ADVERTISING'){
+		result.columns.push(
+			{
+				alignment: 'left',
+				text: 'ACHTUNG! Eilige Werbeware',
+				style: 'warning'
+			}
+		)
+	}
+
+	return result;
 }
 
-function getDate(date:Date){
-    return {
-		text: [
-		    {text: 'Datum: ', style: 'subheader'},
-    		{text: date.toLocaleDateString("de-DE")}
-	    ]
+function getDate(date:Date, advertisingPlanId:string): ContentColumns{
+    let result: ContentColumns = {
+    	columns: [
+            {
+                alignment: 'left',
+        		text: [
+					{text: 'Datum: ', style: 'subheader'},
+					{text: date.toLocaleDateString("de-DE")}
+				],
+            },
+        	
+    	]
 	}
+
+	if(advertisingPlanId){
+		result.columns.push(
+			{
+				alignment: 'left',
+				text: `Werbeplannummer: ${advertisingPlanId}`,
+				style: 'advertising'
+			}
+		);
+	}
+
+	return result;
 }
 
-function getSender(){
-	return {
-		text: 'Absender:',
-		style: 'subheader'
+function getSender(calendarWeek:string): ContentColumns{
+	let result:ContentColumns = {
+    	columns: [
+            {
+                alignment: 'left',
+        		text: "Absender: ",
+                style: 'subheader'
+            }, 	
+    	]
 	}
+	
+	if(calendarWeek){
+
+		result.columns.push({
+        	    alignment: 'left',
+        		text: `Kalenderwoche: ${calendarWeek}`,
+        		style: 'advertising'
+        	}
+		);
+	}
+	
+	return result;
 }
 
 function getGermanAddress(location:any){
@@ -113,11 +156,11 @@ export function getTranportUnitDocDefinition(data:any): TDocumentDefinitions
 {
     return {
     	content: [
-            getHeader(data.fmaRequestId), '\n',
+            getHeader(data.fmaRequestId, data.goodsType), '\n',
             
-            getDate(new Date()),'\n',
+            getDate(new Date(), data.advertising.advertisingPlanId),'\n',
     		
-    		getSender(),
+    		getSender(data.advertising.calendarWeek),
     		getGermanAddress(data.senderLocation),'\n',
     		
     		getRecipient(),
@@ -135,6 +178,10 @@ export function getTranportUnitDocDefinition(data:any): TDocumentDefinitions
     	styles: {
     	    warning:{
     	        fontSize: 16,
+    	        color: 'red',
+    	    },
+    	    advertising:{
+    	        fontSize: 13,
     	        color: 'red',
     	    },
     		header: {
