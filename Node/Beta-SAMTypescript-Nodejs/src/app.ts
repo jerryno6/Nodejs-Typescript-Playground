@@ -1,6 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { home } from './handlers/home';
 import { getTodo } from './handlers/todo';
+import { generatePDF } from './handlers/generatePDF';
 import { GetErrorResponse, GetSuccessResponse } from './utils/Response';
 
 /**
@@ -15,3 +16,4 @@ import { GetErrorResponse, GetSuccessResponse } from './utils/Response';
 
 export const homeHandler = home;
 export const getTodoHandler = getTodo;
+export const generatePDFHandler = generatePDF;

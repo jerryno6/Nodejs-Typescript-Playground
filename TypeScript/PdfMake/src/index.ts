@@ -14,6 +14,10 @@ var fonts = {
 const transportUnitData = {
     fmaRequestId: '1HTE4TDFGEFEF2D',
     goodsType: 'ADVERTISING',
+    advertising : {
+        "advertisingPlanId": '2022-000019',
+        "calendarWeek": '2022/9'
+    },
     senderLocation: {
         id: '0304000',
         type: 'HEADQUATER',
