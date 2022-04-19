@@ -1,7 +1,6 @@
 import { ContentColumns, TDocumentDefinitions } from "pdfmake/interfaces";
-import { resourceUsage } from "process";
 
-function getHeader(teNumber:any, goodsType:string): ContentColumns {
+function getHeader(teNumber:any, isAdvertising:boolean): ContentColumns {
     let result: ContentColumns = {
     	columns: [
             {
@@ -12,7 +11,7 @@ function getHeader(teNumber:any, goodsType:string): ContentColumns {
     	]
 	}
 
-	if (goodsType === 'ADVERTISING'){
+	if (isAdvertising){
 		result.columns.push(
 			{
 				alignment: 'left',
@@ -25,55 +24,20 @@ function getHeader(teNumber:any, goodsType:string): ContentColumns {
 	return result;
 }
 
-function getDate(date:Date, advertisingPlanId:string): ContentColumns{
-    let result: ContentColumns = {
-    	columns: [
-            {
-                alignment: 'left',
-        		text: [
-					{text: 'Datum: ', style: 'subheader'},
-					{text: date.toLocaleDateString("de-DE")}
-				],
-            },
-        	
-    	]
+function getDate(date:Date){
+    return {
+		text: [
+			{text: 'Datum: ', style: 'subheader'},
+			{text: date.toLocaleDateString("de-DE")}
+		],
 	}
-
-	if(advertisingPlanId){
-		result.columns.push(
-			{
-				alignment: 'left',
-				text: `Werbeplannummer: ${advertisingPlanId}`,
-				style: 'advertising'
-			}
-		);
-	}
-
-	return result;
 }
 
-function getSender(calendarWeek:string): ContentColumns{
-	let result:ContentColumns = {
-    	columns: [
-            {
-                alignment: 'left',
-        		text: "Absender: ",
-                style: 'subheader'
-            }, 	
-    	]
-	}
-	
-	if(calendarWeek){
-
-		result.columns.push({
-        	    alignment: 'left',
-        		text: `Kalenderwoche: ${calendarWeek}`,
-        		style: 'advertising'
-        	}
-		);
-	}
-	
-	return result;
+function getSender(){
+    return {
+		text: "Absender: ",
+		style: 'subheader'
+	} 	
 }
 
 function getGermanAddress(location:any){
@@ -114,27 +78,49 @@ function getNameOfTargetPhotoStudio(location:any){
     //'Orendt Studios GmbH (0925000)'
 }
 
-function getTable(articles:any){
+function getTable(articles:any, isAdvertising:boolean){
+	let tableBody = [];
+
     // Header of table
-    let tableBody = [
-            [
-                {text: '#', style: 'tableHeader'}, 
-                {text: 'Gtin', style: 'tableHeader'}, 
-                {text: 'Artikelbeschreibung', style: 'tableHeader'}
-            ]
-        ];
-        
+	let tableHeader = 
+		[
+			{text: '#', style: 'tableHeader'}, 
+			{text: 'Gtin', style: 'tableHeader'}, 
+			{text: 'Artikelbeschreibung', style: 'tableHeader'}
+		]
+	
+	if(isAdvertising){
+		tableHeader.push({text: 'Werbeplan\nKalenderwoche', style: 'tableHeader'})
+	}
+	tableBody.push(tableHeader)
+
     // content of table
     for (let i = 0; i < articles.length; i++) {
-        tableBody.push(
-            [{text:i+1, alignment:'center'}, articles[i].gtin, articles[i].title]
-        );
+		let aRow = 
+            [
+				{ text:i+1, style: 'tableCellCenter' },
+				{ text: articles[i].gtin, style: 'tableCell' },
+				{ text: articles[i].title, style: 'tableCell' },
+			]
+
+		if(isAdvertising){
+			aRow.push({ text: `${articles[i].advertisingPlanId}\n${articles[i].calendarWeek}`, style: 'tableCellCenter' })
+		}
+		
+        tableBody.push(aRow);
     }
-    
+  
+	// Define amount of columns and width
+	let tableColumns = [30, 110, '*']
+	if(isAdvertising){
+		tableColumns.push('auto')
+	}
+
+	// Define table with columns & contents
     let table = {
 		style: 'table',
 		table: {
-            widths: [30, 110, '*'],
+            widths: tableColumns,
             body: tableBody
 		}
     }
@@ -154,13 +140,14 @@ function getPackedBy(packedBy:string){
 // bind data to transportUnitTemplate and return docDefinition
 export function getTranportUnitDocDefinition(data:any): TDocumentDefinitions
 {
+	let isAdvertising = data.goodsType === 'ADVERTISING'
     return {
     	content: [
-            getHeader(data.fmaRequestId, data.goodsType), '\n',
+            getHeader(data.fmaRequestId, isAdvertising), '\n',
             
-            getDate(new Date(), data.advertising.advertisingPlanId),'\n',
+            getDate(new Date()),'\n',
     		
-    		getSender(data.advertising.calendarWeek),
+    		getSender(),
     		getGermanAddress(data.senderLocation),'\n',
     		
     		getRecipient(),
@@ -170,7 +157,7 @@ export function getTranportUnitDocDefinition(data:any): TDocumentDefinitions
     		
     		getNameOfTargetPhotoStudio(data.targetLocation),'\n',
     		
-    		getTable(data.articles),'\n',
+    		getTable(data.articles, isAdvertising),'\n',
     		
             getPackedBy(data.packedBy),
     	],
@@ -193,8 +180,13 @@ export function getTranportUnitDocDefinition(data:any): TDocumentDefinitions
     			fontSize: 13,
     			bold: true,
     		},
-    		table: {
-    			
+    		tableCell: {
+				alignment: 'left',
+    			margin: [2,0,2,0],
+    		},
+    		tableCellCenter: {
+				alignment: 'center',
+    			margin: [2,0,2,0],
     		},
     		tableHeader: {
     		    alignment: 'center',
