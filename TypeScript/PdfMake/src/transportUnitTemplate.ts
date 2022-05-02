@@ -5,7 +5,7 @@ function getHeader(teNumber:any, isAdvertising:boolean): ContentColumns {
     	columns: [
             {
                 alignment: 'left',
-        		text: `TE-Number: ${teNumber}`,
+        		text: `ID: ${teNumber}`,
                 style: 'header'
             },	
     	]
@@ -15,7 +15,7 @@ function getHeader(teNumber:any, isAdvertising:boolean): ContentColumns {
 		result.columns.push(
 			{
 				alignment: 'left',
-				text: 'ACHTUNG! Eilige Werbeware',
+				text: 'Urgent',
 				style: 'warning'
 			}
 		)
@@ -35,7 +35,7 @@ function getDate(date:Date){
 
 function getSender(){
     return {
-		text: "Absender: ",
+		text: "Sender:",
 		style: 'subheader'
 	} 	
 }
@@ -54,7 +54,7 @@ function getGermanAddress(location:any){
 
 function getRecipient(){
     return {
-		text: 'Anshrift:',
+		text: 'Receiver:',
 		style: 'subheader'
     }    
 }
@@ -62,20 +62,19 @@ function getRecipient(){
 function getTotalItems(total:any){
     return {
         text: [
-		    {text: 'Gesamtanzahl: ', style: 'subheader'},
+		    {text: 'Total: ', style: 'subheader'},
             {text: total}
 	    ]
 	}
 }
 
-function getNameOfTargetPhotoStudio(location:any){
+function getNameOfTarget(location:any){
     return {
         text: [
-            {text: 'Fotomuster für: ', style: 'subheader'},
+            {text: 'For Store ', style: 'subheader'},
             {text: `${location.displayName} (${location.id})`}
         ]
     }
-    //'Orendt Studios GmbH (0925000)'
 }
 
 function getTable(articles:any, isAdvertising:boolean){
@@ -90,7 +89,7 @@ function getTable(articles:any, isAdvertising:boolean){
 		]
 	
 	if(isAdvertising){
-		tableHeader.push({text: 'Werbeplan\nKalenderwoche', style: 'tableHeader'})
+		tableHeader.push({text: 'Program Id', style: 'tableHeader'})
 	}
 	tableBody.push(tableHeader)
 
@@ -131,7 +130,7 @@ function getTable(articles:any, isAdvertising:boolean){
 function getPackedBy(packedBy:string){
     return {
 	    text: [
-	        {text: 'Verpackt durch: ', style: 'subheader'},
+	        {text: 'Order By ', style: 'subheader'},
 	        {text: packedBy}
 	    ]
 	}
@@ -155,7 +154,7 @@ export function getTranportUnitDocDefinition(data:any): TDocumentDefinitions
     		
     		getTotalItems(data.articles.length), '\n',
     		
-    		getNameOfTargetPhotoStudio(data.targetLocation),'\n',
+    		getNameOfTarget(data.targetLocation),'\n',
     		
     		getTable(data.articles, isAdvertising),'\n',
     		

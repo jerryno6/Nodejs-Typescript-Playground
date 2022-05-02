@@ -9,13 +9,13 @@ const transportUnitData = {
     senderLocation: {
         id: '0304000',
         type: 'HEADQUATER',
-        displayName: 'Vogelheim Studio',
-        address1: 'Vogelheim Studio Bmbh',
+        displayName: 'Store1',
+        address1: 'Address1',
         address2: 'ABC department',
         street: 'Orange str',
         houseNumber: '21',
         zipCode: '123454',
-        city: 'Vogelheim',
+        city: 'City',
         email: 'abc@abc.com',
         contactPerson: 'Tom',
         startDate: '23/2/2022',
@@ -24,13 +24,13 @@ const transportUnitData = {
     targetLocation: {
         id: '0979000',
         type: 'PHOTOSTUDIO',
-        displayName: 'Zummeo',
-        address1: 'Zummeo Studio Bmbh',
+        displayName: 'DisplayName',
+        address1: 'Address',
         address2: null,
         street: 'Orange str',
         houseNumber: '21',
         zipCode: '123454',
-        city: 'Essen',
+        city: 'Bermingham',
         email: 'abc@abc.com',
         contactPerson: 'Tom',
         startDate: '23/2/2022',
@@ -38,8 +38,8 @@ const transportUnitData = {
     },
     packedBy: 'abc@gmail.com',
     articles: [
-        { gtin:'1234567801234', title:'MANGUUN Rock, Animal Print, Gummibund, fr Damen', advertisingPlanId: "2022-000019", calendarWeek: "19/2019"},
-        { gtin:'8763251359235', title:'test title', advertisingPlanId: "2022-000019", calendarWeek: "19/2019" },
+        { gtin:'1234567801234', title:'a title of a product', advertisingPlanId: "2022-000019", calendarWeek: "19/2019"},
+        { gtin:'8763251359235', title:'product tiltle', advertisingPlanId: "2022-000019", calendarWeek: "19/2019" },
     ]
 }
 
