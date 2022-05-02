@@ -1,12 +1,6 @@
 import { getTranportUnitDocDefinition } from './transportUnitTemplate';
-import PdfPrinter from 'pdfmake';
-
-var fonts = {
-	Roboto: {
-		normal: './fonts/Roboto-Regular.ttf',
-		bold: './fonts/Roboto-Medium.ttf',
-	}
-};
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import pdfMake from 'pdfmake/build/pdfmake';
 
 //Mock data
 const transportUnitData = {
@@ -51,18 +45,20 @@ const transportUnitData = {
 
 
 let docDefinition= getTranportUnitDocDefinition(transportUnitData);
-let printer = new PdfPrinter(fonts);
-let pdfDoc = printer.createPdfKitDocument(docDefinition);
-
-//1. if we want to save to file, use 2 lines below
-import fs from 'fs';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 let fileName = 'basics.pdf'
-pdfDoc.pipe(fs.createWriteStream(fileName));
-pdfDoc.end();
-console.log('file has been generated');
+let pdf = pdfMake.createPdf(docDefinition) 
 
-//2. we want to save to s3, use 2 lines below
+//1. if we want to save to file, use lines below
+import fs from 'fs';
+pdf.getBuffer((buffer)=>{
+    fs.writeFile(fileName, buffer, error => { if(error) console.log(error)})
+    console.log('file has been generated');
+});
+
 /*
+2. we want to save to s3, use lines below
+
 import awss3 from 'aws-sdk/clients/s3';
 import stream from 'stream';
 
@@ -88,8 +84,9 @@ function getS3OutputStream(bucket: string, key: string) {
 }
 
 const bucket = 'arn:aws:s3:eu-central-1:085420227850:accesspoint/vuleaccesspoint'
-const fileName = `pdfs/file-${Date.now()}.pdf`
-let s3OutputStream = getS3OutputStream(bucket, fileName);
-pdfDoc.pipe(s3OutputStream);
-pdfDoc.end();
+const awsFileName = `pdfs/file-${Date.now()}.pdf`
+let s3OutputStream = getS3OutputStream(bucket, awsFileName);
+var pdfStream = pdf.getStream()
+pdfStream.pipe(s3OutputStream);
+pdfStream.end();
 */
